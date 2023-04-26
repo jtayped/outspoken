@@ -9,10 +9,15 @@ const Post = ({ post }) => {
 
   useEffect(() => {
     async function fetchUser() {
-      const docRef = doc(userCollection, post.user);
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();
-      setUser(data);
+      try {
+        const docRef = doc(userCollection, post.user);
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        console.log(data);
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     fetchUser();
