@@ -1,9 +1,10 @@
 import React from "react";
-import { Posts } from "../containers";
+import { Posts, CreatePost } from "../containers";
 
 const Home = ({ postsList }) => {
   return (
-    <main>
+    <main className="flex flex-col">
+      <CreatePost />
       <Posts postsList={postsList} />
     </main>
   );
