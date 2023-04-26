@@ -3,6 +3,15 @@ import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { BiUpArrow, BiDownArrow } from "react-icons/bi";
 
+const PostDetail = ({ icon, text }) => {
+  return (
+    <div className="flex gap-1 items-center">
+      {icon}
+      {text}
+    </div>
+  )
+}
+
 const Post = ({ post }) => {
   const [user, setUser] = useState(null);
   const userCollection = collection(db, "users");
@@ -13,7 +22,6 @@ const Post = ({ post }) => {
         const docRef = doc(userCollection, post.user);
         const docSnap = await getDoc(docRef);
         const data = docSnap.data();
-        console.log(data);
         setUser(data);
       } catch (err) {
         console.error(err);
@@ -26,22 +34,27 @@ const Post = ({ post }) => {
   const upDownSize = 30;
 
   return (
-    <li>
+    <li className="w-full p-3">
       <div className="flex">
-        <div className="w-[400px] p-2 flex flex-col items-center gap-3">
+        <div className="p-2 flex flex-col items-center gap-3">
           <img
-            className="aspect-square object-cover rounded-full"
-            src={user.photoURL}
+            className="w-10 aspect-square object-cover rounded-full"
+            src={user && user.photoURL}
             alt="user"
           />
-          <div className="flex flex-col gap-1 items-center text-white">
-            <BiUpArrow size={upDownSize} />
-            <BiDownArrow size={upDownSize} />
-          </div>
         </div>
         <article>
-          <h2>{post.title}</h2>
-          <p>{post.text}</p>
+          <h2 className="text-3xl font-bold">{post.title}</h2>
+          <div className="flex text-white">
+            <PostDetail
+              icon={<BiUpArrow size={upDownSize} />}
+              text={post.upvotes}
+            />
+            <PostDetail
+              icon={<BiDownArrow size={upDownSize} />}
+              text={post.upvotes}
+            />
+          </div>
         </article>
       </div>
     </li>

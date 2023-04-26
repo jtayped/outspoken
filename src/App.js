@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { db } from "./config/firebase";
 import { getDocs, collection } from "firebase/firestore";
-import { Home } from "./pages";
+import { Home, SignUp } from "./pages";
 import { Header } from "./containers";
 
 function App() {
@@ -28,9 +28,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
       <Routes>
         <Route exact path="/" element={<Home postsList={postsList} />} />
+        <Route exact path="/SignUp" element={<SignUp />} />
       </Routes>
     </BrowserRouter>
   );
