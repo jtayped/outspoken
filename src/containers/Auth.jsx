@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { BsFillPersonFill, BsKeyFill } from "react-icons/bs";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
+import { auth, googleProvider } from "../config/firebase";
 
 const Auth = () => {
   const iconSize = 30;
@@ -9,14 +15,32 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error(err);
     }
   };
+
+  const signInWithGoogle = async (e) => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const logOut = async (e) => {
+    try {
+      await signOut(auth, googleProvider);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //console.log(auth.currentUser);
 
   return (
     <div className="fixed z-10 top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-6 bg-zinc-800 text-white flex flex-col gap-5 items-center font-poppins rounded-lg">
@@ -27,7 +51,7 @@ const Auth = () => {
         </p>
       </div>
 
-      <form className="flex flex-col gap-4" onSubmit={handleLogin}>
+      <form className="flex flex-col gap-4" onSubmit={handleSignIn}>
         <div className="flex flex-col gap-2">
           <div className="flex flex-row items-center gap-1 bg-zinc-900 p-2 rounded-md">
             <BsFillPersonFill size={iconSize} />
@@ -69,6 +93,7 @@ const Auth = () => {
       </div>
       <button
         type="button"
+        onClick={signInWithGoogle}
         class="text-white w-full  bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
       >
         <svg
@@ -88,6 +113,8 @@ const Auth = () => {
         </svg>
         Sign up with Google<div></div>
       </button>
+
+      <button onClick={logOut}>Log out</button>
     </div>
   );
 };

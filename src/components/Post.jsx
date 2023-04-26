@@ -9,14 +9,14 @@ const PostDetail = ({ icon, text }) => {
       {icon}
       {text}
     </div>
-  )
-}
+  );
+};
 
 const Post = ({ post }) => {
   const [user, setUser] = useState(null);
-  const userCollection = collection(db, "users");
 
   useEffect(() => {
+    const userCollection = collection(db, "users");
     async function fetchUser() {
       try {
         const docRef = doc(userCollection, post.user);
@@ -29,7 +29,7 @@ const Post = ({ post }) => {
     }
 
     fetchUser();
-  }, [post, userCollection]);
+  }, [post]);
 
   const upDownSize = 30;
 

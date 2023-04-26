@@ -8,9 +8,8 @@ import { Header } from "./containers";
 function App() {
   const [postsList, setPosts] = useState([]);
 
-  const postsCollection = collection(db, "posts");
-
   useEffect(() => {
+    const postsCollection = collection(db, "posts");
     const getPostsList = async () => {
       try {
         const data = await getDocs(postsCollection);
@@ -24,7 +23,7 @@ function App() {
       }
     };
     getPostsList();
-  }, [postsCollection]);
+  }, []);
 
   return (
     <BrowserRouter>
