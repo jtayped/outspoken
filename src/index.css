@@ -7,3 +7,14 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+body {
+  background-color: black;
+}
+
+p,
+h1,
+h2,
+h3 {
+  color: white;
+}

@@ -3,9 +3,9 @@ import { Post } from "../components";
 
 const Posts = ({ postsList }) => {
   return (
-    <ul>
+    <ul className="flex flex-col">
       {postsList.map((post) => (
-        <Post post={post} key={post.id}/>
+        <Post post={post} key={post.id} />
       ))}
     </ul>
   );
