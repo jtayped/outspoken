@@ -23,5 +23,25 @@ h3 {
 
 a {
   text-decoration-line: underline;
-  color: #34A1E5;
+  color: #34a1e5;
+}
+
+.blue-text-gradient {
+  background: linear-gradient(to right, #38bdf8, #4989d8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer {
+  .blue-gradient {
+    @apply bg-gradient-to-r from-sky-400 to-blue-400;
+  }
+
+  .input-field {
+    @apply flex flex-row items-center gap-1 bg-zinc-900 rounded-md;
+  }
+
+  .input {
+    @apply bg-transparent focus:outline-none;
+  }
 }
