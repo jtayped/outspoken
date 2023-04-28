@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import { BsFillPersonFill, BsKeyFill } from "react-icons/bs";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { db, auth, googleProvider } from "../config/firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { collection, setDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithRedirect,
+} from "firebase/auth";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { InputForm } from "../components";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const iconSize = 30;
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -16,43 +21,49 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
   const [confirmPasswordIncorrect, setConfirmPasswordIncorrect] =
     useState(false);
-  useState(true);
 
   const signInWithGoogle = async (e) => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithRedirect(auth, googleProvider);
     } catch (err) {
       console.log(err);
     }
   };
 
-  async function uploadUser() {
-    const userCollection = collection(db, "/users");
-    setDoc(userCollection, {
+  async function uploadUser(userId) {
+    const userCollection = collection(db, "users");
+    await setDoc(doc(userCollection, userId), {
       firstName: name,
       lastName: lastName,
       photoURL: photoURL,
     });
   }
 
-  async function createUser() {
+  async function createUser(e) {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setConfirmPasswordIncorrect(true);
+      return;
+    }
+
     try {
-      if (password === confirmPassword) {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const { user } = userCredential;
-        await uploadUser(user);
-      } else {
-        setConfirmPasswordIncorrect(true);
-      }
+      setLoading(true);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const { user } = userCredential;
+      await uploadUser(user.uid);
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
+      setConfirmPasswordIncorrect(true);
+      setLoading(false);
     }
   }
 
@@ -74,8 +85,8 @@ const SignUp = () => {
             type="text"
             placeHolder="Name"
             icon={<BsFillPersonFill size={iconSize} />}
-            isincorrect={false}
             setFunction={setName}
+            autoComplete="given-name"
           />
           <InputForm
             type="text"
@@ -83,6 +94,7 @@ const SignUp = () => {
             icon={<BsFillPersonFill size={iconSize} />}
             setFunction={setLastName}
             isincorrect={false}
+            autoComplete="family-name"
           />
         </div>
         <InputForm
@@ -91,6 +103,7 @@ const SignUp = () => {
           icon={<MdOutlineAlternateEmail size={iconSize} />}
           setFunction={setEmail}
           isincorrect={confirmPasswordIncorrect}
+          autoComplete="email"
         />
         <InputForm
           type="password"
@@ -98,6 +111,7 @@ const SignUp = () => {
           icon={<BsKeyFill size={iconSize} />}
           setFunction={setPassword}
           isincorrect={confirmPasswordIncorrect}
+          autoComplete="new-password"
         />
         <AnimatePresence>
           {password ? (
@@ -113,6 +127,7 @@ const SignUp = () => {
                 icon={<BsKeyFill size={iconSize} />}
                 setFunction={setConfirmPassword}
                 isincorrect={confirmPasswordIncorrect}
+                autoComplete=""
               />
             </motion.div>
           ) : null}
@@ -121,7 +136,7 @@ const SignUp = () => {
           type="submit"
           className="text-white font-poppins font-bold text-lg p-2 rounded-md mt-1 w-full bg-gradient-to-r from-sky-400 to-blue-400"
         >
-          Submit
+          {isLoading ? "Thinking..." : "Submit"}
         </button>
       </form>
 
