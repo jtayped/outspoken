@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsFillPersonFill, BsKeyFill } from "react-icons/bs";
 import { MdOutlineAlternateEmail } from "react-icons/md";
-import { db, auth, googleProvider } from "../config/firebase";
+import { db, auth, googleProvider, storage } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithRedirect,
 } from "firebase/auth";
 import { collection, doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 import { InputForm } from "../components";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -59,13 +61,24 @@ const SignUp = () => {
       );
       const { user } = userCredential;
       await uploadUser(user.uid);
-      navigate("/dashboard");
+      await sendEmailVerification(user);
+      navigate("/");
     } catch (err) {
       console.error(err);
       setConfirmPasswordIncorrect(true);
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    const profilePicturesRef = ref(
+      storage,
+      "/profilePictures/NoProfilePicture.webp"
+    );
+    getDownloadURL(profilePicturesRef).then((url) => {
+      setPhotoURL(url);
+    });
+  });
 
   return (
     <div className="w-full p-10 flex flex-col gap-6">
