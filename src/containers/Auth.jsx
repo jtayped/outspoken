@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { BsFillPersonFill, BsKeyFill } from "react-icons/bs";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
 
 const Auth = () => {
@@ -14,7 +11,6 @@ const Auth = () => {
   const [password, setPassword] = useState("");
 
   const handleSignIn = async (e) => {
-    e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
