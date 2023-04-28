@@ -4,9 +4,7 @@ import { BsFillPersonFill, BsKeyFill } from "react-icons/bs";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut,
 } from "firebase/auth";
-import { doc } from "firebase/firestore";
 import { auth, googleProvider } from "../config/firebase";
 
 const Auth = () => {
@@ -27,14 +25,6 @@ const Auth = () => {
   const signInWithGoogle = async (e) => {
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const logOut = async (e) => {
-    try {
-      await signOut(auth, googleProvider);
     } catch (err) {
       console.log(err);
     }
@@ -77,7 +67,7 @@ const Auth = () => {
             </Link>
           </div>
           <button
-            className="blue-gradient p-2 rounded-xl font-semibold"
+            className="bg-gradient-to-r from-sky-400 to-blue-400 p-2 rounded-lg font-semibold"
             type="submit"
           >
             Log In
@@ -111,8 +101,6 @@ const Auth = () => {
         </svg>
         Sign up with Google<div></div>
       </button>
-
-      <button onClick={logOut}>Log out</button>
     </div>
   );
 };
