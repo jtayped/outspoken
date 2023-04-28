@@ -13,6 +13,7 @@ const InputForm = ({ type, placeHolder, icon, setFunction, isincorrect }) => {
         className="input w-full"
         onChange={(e) => setFunction(e.target.value)}
         placeholder={placeHolder}
+        required
       />
     </div>
   );

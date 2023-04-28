@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { BsFillPersonFill, BsKeyFill } from "react-icons/bs";
 import { MdOutlineAlternateEmail } from "react-icons/md";
-import { auth, googleProvider } from "../config/firebase";
+import { db, auth, googleProvider } from "../config/firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { collection, setDoc } from "firebase/firestore";
 import { InputForm } from "../components";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -14,6 +15,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [photoURL, setPhotoURL] = useState("");
 
   const [confirmPasswordIncorrect, setConfirmPasswordIncorrect] =
     useState(false);
@@ -27,10 +29,25 @@ const SignUp = () => {
     }
   };
 
-  function createUser() {
+  async function uploadUser() {
+    const userCollection = collection(db, "/users");
+    setDoc(userCollection, {
+      firstName: name,
+      lastName: lastName,
+      photoURL: photoURL,
+    });
+  }
+
+  async function createUser() {
     try {
       if (password === confirmPassword) {
-        createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const { user } = userCredential;
+        await uploadUser(user);
       } else {
         setConfirmPasswordIncorrect(true);
       }
@@ -94,7 +111,7 @@ const SignUp = () => {
                 type="password"
                 placeHolder="Confirm Password"
                 icon={<BsKeyFill size={iconSize} />}
-                setFunction={setPassword}
+                setFunction={setConfirmPassword}
                 isincorrect={confirmPasswordIncorrect}
               />
             </motion.div>
