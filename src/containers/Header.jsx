@@ -1,20 +1,13 @@
 import React, { useState } from "react";
-import { auth } from "../config/firebase";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { BsList, BsSearch } from "react-icons/bs";
+import { BsList } from "react-icons/bs";
 import { IoNotifications } from "react-icons/io5";
 import { RiMessageFill } from "react-icons/ri";
+import { SideBar } from "../components";
 
 const Header = ({ userData, isLoading }) => {
-  const navigate = useNavigate();
   const [isMenu, setMenu] = useState(true);
   function toggleMenu() {
     setMenu(!isMenu);
-  }
-
-  function logOut() {
-    signOut(auth).then(navigate("/"));
   }
 
   return (
@@ -40,6 +33,7 @@ const Header = ({ userData, isLoading }) => {
           className="h-full aspect-square rounded-full"
         />
       </div>
+      {isMenu ? <SideBar userData={userData} /> : null}
     </header>
   );
 };
