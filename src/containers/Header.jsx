@@ -2,42 +2,43 @@ import React, { useState } from "react";
 import { auth } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { BsList, BsSearch } from "react-icons/bs";
+import { IoNotifications } from "react-icons/io5";
+import { RiMessageFill } from "react-icons/ri";
 
 const Header = ({ userData, isLoading }) => {
   const navigate = useNavigate();
-  const [isDropdown, setDropdown] = useState(true);
-  function toggleDropdown() {
-    setDropdown(!isDropdown);
+  const [isMenu, setMenu] = useState(true);
+  function toggleMenu() {
+    setMenu(!isMenu);
   }
 
-  function logOut () {
+  function logOut() {
     signOut(auth).then(navigate("/"));
   }
 
   return (
-    <header className="fixed top-0 w-full text-white flex justify-between items-center pt-10 px-10">
-      <div></div>
-      <div className="relative">
-        {isLoading || userData.photoURL === undefined ? null : (
-          <img
-            src={userData.photoURL}
-            alt="profile"
-            className="w-[40px] aspect-square object-cover rounded-full"
-            onClick={toggleDropdown}
-          />
-        )}
-        {isDropdown ? (
-          <nav className="bg-zinc-800 absolute right-0 w-[150px] p-3 rounded-xl">
-            <ul>
-              <li>
-                <button>Switch Accounts</button>
-              </li>
-              <li>
-                <button onClick={logOut}>Log Out</button>
-              </li>
-            </ul>
-          </nav>
-        ) : null}
+    <header className="fixed top-0 w-full flex justify-between items-center h-20 text-white p-5 gap-4">
+      <div className="h-full">
+        <button onClick={toggleMenu}>
+          <BsList size={35} />
+        </button>
+      </div>
+      <div className="h-full flex items-center">
+        <h1 className="text-xl font-bold">Outspoken</h1>
+      </div>
+      <div className="h-full flex items-center gap-4">
+        <button>
+          <IoNotifications size={26} />
+        </button>
+        <button>
+          <RiMessageFill size={26} />
+        </button>
+        <img
+          src={userData.photoURL}
+          alt="Profile"
+          className="h-full aspect-square rounded-full"
+        />
       </div>
     </header>
   );

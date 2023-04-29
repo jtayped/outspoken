@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { collection, doc, getDoc } from "firebase/firestore";
-import { db } from "../config/firebase";
+import React, { useEffect, useState } from "react";
+import { auth } from "../config/firebase";
 import { BiUpArrow, BiDownArrow } from "react-icons/bi";
+import getUserData from "../js/getUserData";
 
 const PostDetail = ({ icon, text }) => {
   return (
@@ -16,25 +16,18 @@ const Post = ({ post }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const userCollection = collection(db, "users");
-    async function fetchUser() {
-      try {
-        const docRef = doc(userCollection, post.user);
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
-        setUser(data);
-      } catch (err) {
-        console.error(err);
+    async function userData() {
+      if (auth?.currentUser?.uid) {
+        setUser(await getUserData());
       }
     }
-
-    fetchUser();
-  }, [post]);
+    setUser(userData());
+  }, []);
 
   const upDownSize = 30;
 
   return (
-    <li className="w-full p-3">
+    <li className="w-full p-3 border-t-[1px] border-zinc-700">
       <div className="flex">
         <div className="p-2 flex flex-col items-center gap-3">
           <img

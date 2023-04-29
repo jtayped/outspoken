@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { db, auth } from "./config/firebase";
 import { getDocs, collection, doc, getDoc } from "firebase/firestore";
 import { Home, SignUp } from "./pages";
-import { Header } from "./containers";
+import userEvent from "@testing-library/user-event";
 
 function App() {
   const [postsList, setPosts] = useState([]);
@@ -16,30 +16,6 @@ function App() {
     });
     return unsubscribe;
   }, []);
-
-  async function getUserData(uid) {
-    try {
-      const docRef = doc(db, "/users", uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        return docSnap.data();
-      } else {
-        console.log("No document found!");
-        return;
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  if (!isLoading && auth.currentUser === undefined) {
-    getUserData(auth.currentUser.uid).then((data) => {
-      setUserData(data);
-    });
-  }
-
-  console.log(userData);
 
   useEffect(() => {
     const postsCollection = collection(db, "posts");
@@ -58,9 +34,23 @@ function App() {
     getPostsList();
   }, []);
 
+  async function getUserData() {
+    const docRef = doc(db, "users", auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setUserData(docSnap.data());
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+  if (auth?.currentUser?.uid) {
+    getUserData();
+  }
+
   return (
     <BrowserRouter>
-      <Header userData={userData} isLoading={isLoading} />
       <Routes>
         <Route
           exact

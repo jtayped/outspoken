@@ -1,23 +1,19 @@
 import React from "react";
 import { Posts, CreatePost, Auth } from "../containers";
 import { auth } from "../config/firebase";
+import { Header } from "../containers";
 
 const Home = ({ postsList, isLoading, userData }) => {
-
   return (
-    <main className="flex flex-col items-center w-full font-poppins mt-10">
+    <main className="flex flex-col w-full font-poppins mt-20">
+      <Header userData={userData} isLoading={isLoading} />
       {!auth.currentUser && !isLoading ? <Auth /> : null}
-      <div className="w-full">
-        <div className="w-full flex items-center p-5">
-          <p className="text-3xl font-sans font-bold">
-            {isLoading || userData.firstName === undefined
-              ? "Loading..."
-              : `Good day ${userData.firstName}! 👋`}
-          </p>
-        </div>
-        <CreatePost />
+      <CreatePost />
+      {isLoading ? (
+        <p className="text-3xl m-6">Loading posts... 🌐</p>
+      ) : (
         <Posts postsList={postsList} />
-      </div>
+      )}
     </main>
   );
 };
