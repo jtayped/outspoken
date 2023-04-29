@@ -65,23 +65,19 @@ const CreatePost = () => {
       className="text-white p-5 flex flex-col gap-2 border-t-[1px] border-zinc-800"
       onSubmit={(event) => uploadPost(event)}
     >
-      <div className="max-w-[250px] border-b-2 px-1">
-        <input
-          type="text"
-          placeholder="Title"
-          className="bg-transparent focus:outline-none text-2xl placeholder:text-2xl"
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div className="border-[1px] p-1">
-        <textarea
-          cols="30"
-          rows="3"
-          placeholder="Opinion"
-          className="bg-transparent focus:outline-none w-full"
-          onChange={(e) => setOpinion(e.target.value)}
-        ></textarea>
-      </div>
+      <input
+        type="text"
+        placeholder="Title"
+        className="bg-zinc-900 focus:outline-none p-2 placeholder:text-2xl rounded-md border-[1px] border-sky-600"
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <textarea
+        cols="30"
+        rows="3"
+        placeholder="Opinion"
+        className="p-1 bg-zinc-900 focus:outline-none w-full rounded-md"
+        onChange={(e) => setOpinion(e.target.value)}
+      ></textarea>
       <ul className="flex flex-wrap gap-1">
         {tags.map((tag, index) => (
           <Tag

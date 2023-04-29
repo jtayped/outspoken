@@ -18,7 +18,7 @@ const Header = ({ userData, isLoading }) => {
   }
 
   return (
-    <header className="fixed top-0 w-full flex justify-between items-center h-20 text-white p-5 gap-4">
+    <header className="fixed top-0 w-full flex justify-between items-center h-20 text-white p-5 gap-4 bg-black">
       <div className="h-full">
         <button onClick={toggleMenu}>
           <BsList size={35} />
